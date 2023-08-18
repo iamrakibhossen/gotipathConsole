@@ -1,0 +1,50 @@
+ new Metric(
+                'bandwidth',
+                'Bandwidth',
+                MetricInterface::TYPE_SNAPSHOT,
+                new GigaBytes,
+                new Usage(0)
+            ),
+            new Metric(
+                'transcoding',
+                'Transcoding',
+                MetricInterface::TYPE_SNAPSHOT,
+                new WholeNumber('number'),
+            ),
+            new Metric(
+                'live_streaming',
+                'Live Streaming',
+                MetricInterface::TYPE_SNAPSHOT,
+                new WholeNumber('number'),
+            )
+
+
+$curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "http://teststreamapi.test/api/usage?username=$serviceId",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Cookie: XSRF-TOKEN=eyJpdiI6InVuYWhlUkdWRTFkWnJCMVhmN2tRQXc9PSIsInZhbHVlIjoiNnR6RlloZmpFV0UyUjEzU0xpVnRwemg3a293UFJsNGF4ZDhuQjdGb0sxMlBvUTczOG9BOG1QSEJxMG1wNGc4REcwMWJWS2lxRURkRTZoU3g3YjBSNEh3aFBqYU5xcG9wOURWWlBNOCtSb3RKSXdtcnNrS2U0VU5FV0RkQ0hoZGoiLCJtYWMiOiJlNDlhNzc2ZjNmYjQ5NjhjOTU1MGY3YmRhOGQ0NjBmYjNlMzJmYjEzN2M2NjZjNDgzNDY4NDFjMjMxNzRlNGJiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjdDaytxSG9OVG14YXVpeTVnNngwblE9PSIsInZhbHVlIjoiTWdVWWQ3bm1pUVA4c21maXhPczNPRGdwSlBHRzQ0cTYvZFI3Vm90a2lvUUVCUTN3cEJCaDF6a1JMR241Sm1XakI0YUN0QVRXMGx6ZFRkREVyYTdtSGd1MG91eW5PVjNPL28yTkNZKzVLVEt5OWpscDBtKzdwZzBaSDI4a0twTSsiLCJtYWMiOiIyYTQxYTcyOTAxMzk4Njg2OGQ3MDFmZWI1MmRlMzE5MDIwYTc1Y2Q5ODQ4MjU3ODUxMDAwNzkyOTM5ZDBmNDdlIiwidGFnIjoiIn0%3D'
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        // echo $response;
+
+        $data = json_decode($response);
+        return [
+            'username' => $serviceId,
+            'storage' => $data['storage'],
+            'bandwidth' => $data['bandwidth'],
+            'transcoding' => $data['transcoding'],
+            'live_streaming' => $data['live_streaming'],
+        ];
